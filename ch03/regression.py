@@ -2,6 +2,7 @@ import sys
 import random
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
 from sklearn.metrics import mean_absolute_error
 
@@ -25,11 +26,11 @@ class Regression:
 
         self.n = len(self.df)
         self.kdtree = KDTree(self.df)
-        self.metric = np.nean
+        self.metric = np.mean
         self.k = 5
 
     def regress(self, query_point):
-        distances, indexes = self.kdtree.query(query_point, self.k)
+        __, indexes = self.kdtree.query(query_point, self.k)
         value = self.metric(self.values.iloc[indexes])
         if np.isnan(value):
             raise Exception('Unexpected result')
@@ -37,6 +38,7 @@ class Regression:
             return value
     
     def error_rate(self, folds):
+        print('[INFO]    Entered error_rate method...')
         holdout = 1 / float(folds)
         errors = []
         for fold in range(folds):
@@ -46,13 +48,15 @@ class Regression:
         return errors
     
     def __validation_data(self, holdout):
-        test_rows = random.sample(self.df.index, int(round(len(self.df) * holdout)))
+        # print(self.df.index.to_set(), int(round(len(self.df) * holdout)))
+        print('[INFO]       Entered __validation_data method...')
+        test_rows = random.sample(set(self.df.index.to_list()), int(round(len(self.df) * holdout)))
         train_rows = set(range(len(self.df))) - set(test_rows)
-        df_test = self.df.ix[test_rows]
+        df_test = self.df.loc[test_rows]
         df_train = self.df.drop(test_rows)
-        test_values = self.values.ix[train_rows]
-        train_values = self.values.ix[train_rows]
-        kd = Regression(data = df_train, values.train_values)
+        test_values = self.values.loc[train_rows]
+        train_values = self.values.loc[train_rows]
+        kd = Regression(data = df_train, values = train_values)
 
         y_hat = []
         y_actual = []
@@ -62,3 +66,26 @@ class Regression:
             y_actual.append(self.values[idx])
             
         return (y_hat, y_actual)
+    
+    def plot_error_rates(self):
+        folds = range(2, 11)
+        errors = pd.DataFrame(
+            {
+                'max': 0,
+                'min': 0
+            },
+            index = folds
+        )
+        for fold in folds:
+            print(f'[INFO] Iterating over fold: {fold} / {max(folds)}')
+            error_rates = self.error_rate(fold)
+            errors['max'][fold] = max(error_rates)
+            errors['min'][fold] = min(error_rates)
+        print('[INFO] Plotting absolute error over folds...')
+        errors.plot(title = 'Mean Absolute error of KNN over different folds')
+        plt.show()
+
+
+if __name__ == '__main__':
+    regression_test = Regression(csv_file = 'input/king_country_data_geocoded.csv')
+    regression_test.plot_error_rates()
