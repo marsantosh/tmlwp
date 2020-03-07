@@ -38,6 +38,8 @@ def validate(trainer, set_of_emails):
     false_positives = 0.0
     false_negatives = 0.0
     confidence = 0.0
+    spam = 0
+    ham = 0
 
     for email in set_of_emails:
         classification = trainer.classify(email)
@@ -49,6 +51,10 @@ def validate(trainer, set_of_emails):
             false_negatives += 1
         else:
             correct += 1
+            if email.category == b'ham':
+                ham += 1
+            else:
+                spam += 1
         
     total = false_positives + false_negatives + correct
 
@@ -58,9 +64,13 @@ def validate(trainer, set_of_emails):
     accuracy = (correct) / total
 
     message = f'''
-    False Positives: {false_positive_rate}
-    False Negatives: {false_negative_rate}
-    Accuracy: {accuracy}
+    Total spam: {spam:d}
+    Total ham: {ham:d}
+    False Positives: {false_positive_rate:1.2f}
+    False Negatives: {false_negative_rate:1.2f}
+    Corrects: {correct:d}
+    Accuracy: {accuracy:1.2f}
+    Confidence: {confidence:1.2f}
     '''
 
     print(message)

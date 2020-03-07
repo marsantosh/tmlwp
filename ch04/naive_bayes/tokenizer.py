@@ -6,6 +6,10 @@ class Tokenizer:
     @staticmethod
     def tokenize(string):
         return re.findall('\w+', string.lower())
+
+    @staticmethod
+    def unique_tokenizer(string):
+        return set(Tokenizer.tokenize(string))
     
     @staticmethod
     def ngram(string, ngram):
