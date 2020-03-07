@@ -76,7 +76,7 @@ def validate(trainer, set_of_emails):
     print(message)
 
 
-trainer = label_to_training_data('tests/fixtures/fold1.label')
-emails = parse_emails('tests/fixtures/fold2.label')
+trainer = label_to_training_data('tests/fixtures/fold2.label')
+emails = parse_emails('tests/fixtures/fold1.label')
 
 validate(trainer, emails)

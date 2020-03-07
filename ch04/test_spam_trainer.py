@@ -1,5 +1,4 @@
 import io
-import sets
 import unittest
 from naive_bayes.email_object import EmailObject
 from naive_bayes.spam_trainer import SpamTrainer
@@ -17,7 +16,7 @@ class TestSpamTrainer(unittest.TestCase):
     
     def test_multiple_categories(self):
         categories = self.trainer.categories
-        expected = sets.Set(
+        expected = set(
             [k for k, v in self.training]
         )
         self.assertEqual(categories, expected)
@@ -56,3 +55,5 @@ class TestSpamTrainer(unittest.TestCase):
         expected = SpamTrainer.Classification(preference, preference_score)
         self.assertEqual(trainer.classify(self.email), expected)
     
+if __name__ == '__main__':
+    unittest.main()

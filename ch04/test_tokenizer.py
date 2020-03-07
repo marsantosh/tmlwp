@@ -21,3 +21,6 @@ class TestTokenizer(unittest.TestCase):
 
         actual = Tokenizer.ngram('quick brown fox', 2)
         self.assertEqual(actual, expectation)
+
+if __name__ == '__main__':
+    unittest.main()
