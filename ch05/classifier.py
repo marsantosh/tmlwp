@@ -80,7 +80,7 @@ class MushroomClassifier(MushroomProblem):
 class MushroomForest(MushroomClassifier):
     def train(self, X, Y):
         clf = ensemble.RandomForestClassifier(n_jobs = 2)
-        clf = clf.git(X, Y)
+        clf = clf.fit(X, Y)
         return clf
 
 
