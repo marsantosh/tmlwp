@@ -8,6 +8,7 @@ __pycache__/
 
 # data information
 data/
+ch04/data/TRAINING
 .vscode
 
 # Distribution / packaging
